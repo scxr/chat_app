@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>Chat Room</title>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" ></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+            $(document).ready(function() {
+
+                var socket = io.connect('http://127.0.0.1:5000');
+
+                socket.on('connect', function(){
+                    socket.send('User connected');
+                })
+
+                socket.on('message', function(msg) {
+                    $("#messages").append('<li>' + msg + '</li>');
+                    console.log(msg);
+                })
+
+                $('#sendmsg').on('click', function() {
+                    socket.send($('#mymsg').val());
+                    $('#mymsg').val('');
+                })
+
+            })
+        </script>
+        <ul id="messages">
+            {% for msg in msgs %}
+                <li>{{msg.msg}}</li>
+            {% endfor %}
+        </ul>
+        <input type="text" id="mymsg">
+        <button id="sendmsg">SEND</button>    
+</body>
+</html>
